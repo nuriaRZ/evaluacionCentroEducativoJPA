@@ -41,6 +41,7 @@ import evaluacionCentroEducativoJPA.Estudiante;
 import evaluacionCentroEducativoJPA.Materia;
 import evaluacionCentroEducativoJPA.Profesor;
 import evaluacionCentroEducativoJPA.Valoracionmateria;
+
 import utils.CacheImagenes;
 
 
@@ -220,8 +221,40 @@ public class PanelGestionValoracionMateriaMejorada extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				
 				
+					Profesor p = (Profesor) jcbProfesor.getSelectedItem();
+					Materia m = (Materia) jcbMateria.getSelectedItem();
+					List<Estudiante> todosEstudiantes = EstudianteControlador.getInstancia().findAllEstudiantes();
+					List<Estudiante> listEstudiantes = new ArrayList<Estudiante>();
+					
+					for (int i = 0; i < todosEstudiantes.size(); i++) {
+						if (listModelEstudiantesSeleccionados.contains(todosEstudiantes.get(i))) {
+							listEstudiantes.add(todosEstudiantes.get(i));
+						}
+					}
+					
+					for(Estudiante est : listEstudiantes) {
+						Valoracionmateria valoracion = ValoracionMateriaControlador.getInstancia().findByEstudianteAndProfesorAndMateria(p, m, est);
+					if (valoracion != null) {
+						valoracion.setValoracion(jslider.getValue());
+						valoracion.setFecha((Date) getJFormattedTextFieldDatePersonalizado().getValue());
+						ValoracionMateriaControlador.getInstancia().merge(valoracion);
+					}
+					else {
+						Valoracionmateria v = new Valoracionmateria();
+						v.setEstudiante(est);
+						v.setMateria(m);
+						v.setProfesor(p);
+						v.setFecha((Date)getJFormattedTextFieldDatePersonalizado().getValue());
+						v.setValoracion(jslider.getValue());
+						ValoracionMateriaControlador.getInstancia().persist(v);
+					
+					}
+				}
+				
 			}
+		
 		});
+	
 		
 		
 		

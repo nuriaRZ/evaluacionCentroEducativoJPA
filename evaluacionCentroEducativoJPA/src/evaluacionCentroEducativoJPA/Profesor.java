@@ -158,20 +158,18 @@ public class Profesor extends Entidad implements Serializable {
 
 		return valoracionmateria;
 	}
-
-	@Override
+	
 	public boolean equals(Object obj) {
 		Profesor p = (Profesor) obj;
-		if (this.id == p.id ) {
+		if (this.id == p.id) {
 			return true;
 		}
-		return false;
+		return false;		
 	}
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return apellido1 + " " + apellido2 + ", " + nombre;
+		return  apellido1 + " "+ apellido2 + ", " + nombre;
 	}
 	
 	

@@ -158,20 +158,18 @@ public class Estudiante extends Entidad implements Serializable {
 
 		return valoracionmateria;
 	}
-
-	@Override
+	
 	public boolean equals(Object obj) {
 		Estudiante e = (Estudiante) obj;
-		if(this.id == e.id) {
+		if (this.id == e.id) {
 			return true;
 		}
-		return false;
+		return false;		
 	}
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return apellido1 + " " + apellido2 + ", " + nombre;
+		return  apellido1 + " " +apellido2 + ", " + nombre ;
 	}
 	
 	

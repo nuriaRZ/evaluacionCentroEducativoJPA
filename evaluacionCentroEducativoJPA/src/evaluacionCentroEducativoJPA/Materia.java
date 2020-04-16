@@ -2,9 +2,6 @@ package evaluacionCentroEducativoJPA;
 
 import java.io.Serializable;
 import javax.persistence.*;
-
-
-
 import java.util.List;
 
 
@@ -89,20 +86,18 @@ public class Materia extends Entidad implements Serializable {
 
 		return valoracionmateria;
 	}
-
-	@Override
+	
 	public boolean equals(Object obj) {
 		Materia m = (Materia) obj;
 		if (this.id == m.id) {
 			return true;
 		}
-		return false;
+		return false;		
 	}
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return acronimo;
+		return  nombre ;
 	}
 	
 	

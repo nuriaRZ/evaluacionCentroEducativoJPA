@@ -2,9 +2,6 @@ package evaluacionCentroEducativoJPA;
 
 import java.io.Serializable;
 import javax.persistence.*;
-
-
-
 import java.util.List;
 
 
@@ -67,20 +64,21 @@ public class Curso extends Entidad implements Serializable {
 
 		return materia;
 	}
+	
+	
 
 	@Override
 	public boolean equals(Object obj) {
-		Curso cu = (Curso) obj;
-		if (this.id == cu.id) {
+		Curso c = (Curso) obj;
+		if (this.id == c.id) {
 			return true;
 		}
-		return false;
+		return false;		
 	}
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return descripcion;
+		return descripcion ;
 	}
 	
 	

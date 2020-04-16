@@ -2,9 +2,6 @@ package evaluacionCentroEducativoJPA;
 
 import java.io.Serializable;
 import javax.persistence.*;
-
-
-
 import java.util.List;
 
 
@@ -93,19 +90,17 @@ public class Tipologiasexo extends Entidad implements Serializable {
 
 		return profesor;
 	}
-
-	@Override
+	
 	public boolean equals(Object obj) {
-		Tipologiasexo s = (Tipologiasexo) obj;
-		if(this.id == s.id) {
+		Tipologiasexo ts = (Tipologiasexo) obj;
+		if (this.id == ts.id) {
 			return true;
 		}
-		return false;
+		return false;		
 	}
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return descripcion;
 	}
 	
