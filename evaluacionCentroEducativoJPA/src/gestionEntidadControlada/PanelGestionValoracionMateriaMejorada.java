@@ -15,10 +15,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -26,6 +28,7 @@ import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.MaskFormatter;
@@ -58,10 +61,19 @@ public class PanelGestionValoracionMateriaMejorada extends JPanel {
 	Valoracionmateria actual = null;
 
 	
-	JButton jbtGuardar = new JButton("Guardar");
+	JButton btnGuardar = new JButton("Guardar las notas de alumnos seleccionados");
 	
 	JSlider jslider = null;
 	JLabel label = new JLabel("5");
+	
+	
+	
+	private DefaultListModel<Estudiante> listModelEstudiantes = new DefaultListModel<Estudiante>();
+	private JList listEstudiantes = new JList<Estudiante>(listModelEstudiantes);
+	
+	private DefaultListModel<Estudiante> listModelEstudiantesSeleccionados = new DefaultListModel<Estudiante>();
+	private JList listEstudiantesSeleccionados = new JList<Estudiante>(listModelEstudiantesSeleccionados);
+	JScrollPane scpEstudiantesSeleccionados = new JScrollPane(listEstudiantesSeleccionados);
 	
 	public PanelGestionValoracionMateriaMejorada () {
 		this.setLayout(new BorderLayout());
@@ -96,14 +108,14 @@ public class PanelGestionValoracionMateriaMejorada extends JPanel {
 
 		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 0;
-		c.gridy = 1;
-		c.gridwidth = 1;
+		c.gridy = 0;
+		
 		c.anchor = GridBagConstraints.EAST;
 		c.insets = new Insets(2, 2, 2, 2);
-		panelGestion.add(new JLabel("Profesores: "), c);
+		panelGestion.add(new JLabel("Profesor: "), c);
 
 		c.gridx = 1;
-		c.gridy = 1;
+		c.gridy = 0;
 		jcbProfesor.setEnabled(true);
 		c.anchor = GridBagConstraints.WEST;
 		panelGestion.add(jcbProfesor, c);
@@ -116,19 +128,17 @@ public class PanelGestionValoracionMateriaMejorada extends JPanel {
 			jcbMateria.addItem(m);
 		}
 
-		c.fill = GridBagConstraints.BOTH;
+		c.fill = GridBagConstraints.NONE;
 		c.gridx = 0;
-		c.gridy = 2;
-		c.gridwidth = 1;
+		c.gridy = 1;
 		c.anchor = GridBagConstraints.EAST;
-		c.insets = new Insets(2, 2, 2, 2);
+		
 		panelGestion.add(new JLabel("Materia: "), c);
 
 		c.gridx = 1;
-		c.gridy = 2;
+		c.gridy = 1;
 		jcbProfesor.setEnabled(true);
 		c.anchor = GridBagConstraints.WEST;
-		c.insets = new Insets(2, 2, 2, 2);
 		panelGestion.add(jcbMateria, c);
 
 		// Inclusión del JSlider
@@ -139,37 +149,33 @@ public class PanelGestionValoracionMateriaMejorada extends JPanel {
 		jslider.setPaintTicks(true);
 		jslider.setPaintLabels(true);
 
-		c.fill = GridBagConstraints.BOTH;
+		
 		c.gridx = 0;
-		c.gridy = 3;
-		c.gridwidth = 1;
+		c.gridy = 2;			
 		c.anchor = GridBagConstraints.EAST;
-		c.insets = new Insets(2, 2, 2, 2);
 		panelGestion.add(new JLabel("Nota: "), c);
 
 		
-	
+		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 1;
-		c.gridy = 3;
-		jcbProfesor.setEnabled(true);
-		c.anchor = GridBagConstraints.WEST;
-		c.insets = new Insets(2, 2, 2, 2);
+		c.gridy = 2;
+		c.gridwidth = 1;		
+		c.anchor = GridBagConstraints.CENTER;		
 		panelGestion.add(jslider, c);
 		
 		//Inclusión del JLabel "nota"
 		
 		c.fill = GridBagConstraints.CENTER;
 		c.gridx = 2;
-		c.gridy = 3;
+		c.gridy = 2;
 		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.EAST;
-		c.insets = new Insets(2, 2, 2, 2);
+		c.anchor = GridBagConstraints.WEST;		
 		panelGestion.add(new JLabel("Nota: "), c);
 		
 		
 		c.gridx = 3;
-		c.gridy = 3;
-		c.anchor = GridBagConstraints.WEST;
+		c.gridy = 2;
+		c.anchor = GridBagConstraints.EAST;
 		c.insets = new Insets(2, 2, 2, 2);
 		panelGestion.add(label, c);
 	
@@ -177,39 +183,49 @@ public class PanelGestionValoracionMateriaMejorada extends JPanel {
 		//Inclusión del JFormattedTextField para fecha
 		
 		c.gridx = 0;
-		c.gridy = 4;
-		c.anchor = GridBagConstraints.WEST;
+		c.gridy = 3;
+		c.anchor = GridBagConstraints.SOUTHEAST;
 		panelGestion.add(new JLabel("Fecha: "), c);
 		
-		c.gridx = 1;
-		c.gridy = 4;
-		c.anchor = GridBagConstraints.WEST;
+		c.gridx = 1;		
+		c.anchor = GridBagConstraints.SOUTHWEST;
 		panelGestion.add(getJFormattedTextFieldDatePersonalizado(), c);
 		
 		
 		//Inclusión de btnActualizar
-		
-		c.gridx = 3;
-		c.gridy = 5;
+		c.fill = GridBagConstraints.EAST;
+		c.gridx = 1;
+		c.gridy = 4;
+		c.insets = new Insets(3, 3, 3, 3);
 		c.anchor = GridBagConstraints.EAST;
 		panelGestion.add(btnActualizar, c);
 		
 		//Inclusion de panel de alumnos no seleccionados
-		
-		c.gridx = 0;
-		c.gridy = 8;
-		c.anchor = GridBagConstraints.WEST;
-		panelGestion.add(getPanelAlumnosNoSeleccionados(), c);
-		
+		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 1;
-		c.gridy = 8;
-		c.anchor = GridBagConstraints.EAST;
-		panelGestion.add(getPanelBotones(), c);
+		c.gridy = 5;		
+		c.anchor = GridBagConstraints.CENTER;
+		panelGestion.add( getPanelEstudiantes(),c);
 		
-		c.gridx = 3;
-		c.gridy = 8;
+		//Inclusion de panel de alumnos no seleccionados
+		c.fill = GridBagConstraints.EAST;
+		c.gridx = 1;
+		c.gridy = 6;		
 		c.anchor = GridBagConstraints.EAST;
-		panelGestion.add(getPanelAlumnosSeleccionados(), c);
+		panelGestion.add( btnGuardar,c);
+		
+		btnGuardar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				
+			}
+		});
+		
+		
+		
+
 
 		
 		return panelGestion;
@@ -241,55 +257,163 @@ public class PanelGestionValoracionMateriaMejorada extends JPanel {
 		return jftf;
 	}
 	
-	private JPanel getPanelAlumnosNoSeleccionados() {
-		JPanel panelAlumnosNoSeleccionados = new JPanel();		
-		panelAlumnosNoSeleccionados.setLayout(new GridBagLayout());
+	private JPanel getPanelEstudiantes() {
+		JPanel panelEstudiantes = new JPanel();		
+		panelEstudiantes.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
+		
+		c.gridx = 0;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.WEST;
+		panelEstudiantes.add(new JLabel("Alumnos no Seleccionados:"), c);
+		
+		c.gridx = 2;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.EAST;
+		panelEstudiantes.add(new JLabel("Alumnos Seleccionados:"), c);
+		
+		
+		
+		listEstudiantes = new JList(this.getDefaultListModel());
+		this.listEstudiantes.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		JScrollPane scpEstudiantes = new JScrollPane(listEstudiantes);
+		listEstudiantes.getSelectedValuesList();
+		
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.BOTH;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.weighty = 1;
+		c.anchor = GridBagConstraints.WEST;
+		panelEstudiantes.add(scpEstudiantes, c);
+		
+		btnActualizar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				List<Estudiante> estudiantes = EstudianteControlador.getInstancia().findAllEstudiantes();
+				for (Estudiante est : estudiantes) {
+					listModelEstudiantes.addElement(est);
+				}
+				
+			}
+		});
+		
+		c.gridwidth = 1;
+		c.insets = new Insets(3, 3, 3, 3);
+		c.fill = GridBagConstraints.BOTH;
+		c.gridx = 1;
+		c.gridy = 1;
+		c.weighty = 1;
+		c.anchor = GridBagConstraints.CENTER;
+		panelEstudiantes.add(getPanelBotones(),c);
+		
+		
+		
+		
+		
+		c.gridwidth = 1;
 		c.insets = new Insets(5, 5, 5, 5);
-		List<Estudiante> estudiantes = EstudianteControlador.getInstancia().findAllEstudiantes();
+		c.fill = GridBagConstraints.BOTH;
+		c.gridx = 2;
+		c.gridy = 1;
+		c.weighty = 1;
+		c.anchor = GridBagConstraints.EAST;
+		panelEstudiantes.add(scpEstudiantesSeleccionados,c);
 		
 		
 		
-		return panelAlumnosNoSeleccionados;
+		return panelEstudiantes;
 		
 	}
 	
-	private JPanel getPanelAlumnosSeleccionados() {
-		JPanel panelAlumnosSeleccionados = new JPanel();		
-		panelAlumnosSeleccionados.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(5, 5, 5, 5);
-		return panelAlumnosSeleccionados;
+	private DefaultListModel getDefaultListModel () {
+		this.listModelEstudiantes = new DefaultListModel<Estudiante>();
+		return this.listModelEstudiantes;
 	}
+	
+	
 	
 	private JPanel getPanelBotones() {
 		JPanel panelBotones = new JPanel();		
 		panelBotones.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(5, 5, 5, 5);
-		JButton btn1 = new JButton("<<");
-		JButton btn2 = new JButton("<");
-		JButton btn3 = new JButton(">");
-		JButton btn4 = new JButton(">>");
+		JButton btn1 = new JButton(">>");
+		JButton btn2 = new JButton(">");
+		JButton btn3 = new JButton("<");
+		JButton btn4 = new JButton("<<");
 		
 		c.gridx = 1;
 		c.gridy = 1;
 		panelBotones.add(btn1, c);
+			btn1.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					List<Estudiante> estudiantes = EstudianteControlador.getInstancia().findAllEstudiantes();
+					for (Estudiante est : estudiantes) {
+						listModelEstudiantesSeleccionados.addElement(est);
+						listModelEstudiantes.removeElement(est);
+					}
+					
+				}
+			});
 		
 		c.gridx = 1;
 		c.gridy = 3;
 		panelBotones.add(btn2, c);
+		btn2.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int estudiantesSeleccionados[] = listEstudiantes.getSelectedIndices();
+				for (int i = estudiantesSeleccionados.length - 1; i > -1 ; i--) {
+					Estudiante est = listModelEstudiantes.elementAt(estudiantesSeleccionados[i]);
+					listModelEstudiantesSeleccionados.addElement(est);
+					listModelEstudiantes.removeElement(est);
+				}
+				
+			}
+				
+			
+		});
 		
 		c.gridx = 1;
 		c.gridy = 5;
 		panelBotones.add(btn3, c);
 		
+		btn3.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int estudiantes[] = listEstudiantesSeleccionados.getSelectedIndices();
+				for (int i = estudiantes.length - 1; i > -1 ; i--) {
+					Estudiante est = listModelEstudiantesSeleccionados.elementAt(estudiantes[i]);
+					listModelEstudiantes.addElement(est);
+					listModelEstudiantesSeleccionados.removeElement(est);
+				
+				}
+			}	
+		});
+		
+		
 		c.gridx = 1;
 		c.gridy = 6;
 		panelBotones.add(btn4, c);
 		
-		
-		
+		btn4.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				List<Estudiante> estudiantes = EstudianteControlador.getInstancia().findAllEstudiantes();
+				for (Estudiante est : estudiantes) {
+					listModelEstudiantes.addElement(est);
+					listModelEstudiantesSeleccionados.removeElement(est);
+				}
+				
+			}
+		});
 		
 		return panelBotones;
 	}
